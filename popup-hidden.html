@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>js-popunder demo</title>
+<script>
+
+var randomString = function(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for(var i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
+
+function jsPopunder(sUrl, sName, sWidth, sHeight) {
+if (typeof(sName)===null || sName === '') sName = Math.floor((Math.random()*1000)+1);
+
+sWidth = (sWidth || screen.width + 1000);
+sHeight = (sHeight || screen.height + 1000); sHeight = sHeight-122;
+
+var size = 'left=' + sWidth + ',top=' + sHeight;
+
+var sOptions = 'toolbar=no,scrollbars=yes,location=yes,statusbar=yes,menubar=no,resizable=1,width=1,height=1,screenX=0,screenY=0,' + size;
+
+// create pop-up from parent context
+var _parent = (top != self && typeof(top.document.location.toString())==='string') ? top : self;
+var popunder = _parent.window.open(sUrl, sName, sOptions);
+if (popunder) {
+popunder.blur();
+if (navigator.userAgent.indexOf('MSIE') === -1) {
+popunder.params = { url: sUrl };
+(function(e) {
+with (e) {
+if (typeof window.mozPaintCount != 'undefined' || typeof navigator.webkitGetUserMedia === "function") {
+try {
+var poltergeist = document.createElement('a');
+poltergeist.href = "javascript:window.open('about:blank').close();document.body.removeChild(poltergeist)";
+document.body.appendChild(poltergeist).click();
+}catch(err){}
+}
+}
+})(popunder);
+}
+window.focus();
+try{ opener.window.focus(); }catch(err){}
+}
+}
+
+function jsAntiBlock(url, num){
+	var h = screen.height + 1000;
+	var w = screen.width + 1000;
+	for (var i = num; i >= 0; i--) {
+		jsPopunder(url,randomString(10),h,w);
+	}
+}
+
+
+function jsNewwindows(url, num) {
+	var url = 'http://example.com';
+	var h = screen.height + 1000;
+	var w = screen.width + 1000;
+	var option = 'height=1,width=1,left=' + h + ',top=' + w + ',titlebar=no,toolbar=no,menubar=no,location=no,directories=no,status=no';
+	for (var i = num; i >= 0; i--) {
+		window.open(url,randomString(10),option);
+	}
+}
+
+function jsNewtab(url,num){
+	for (var i = num; i >= 0; i--) {
+		window.open(url, '_blank');
+	}
+}
+
+</script>
+<script>
+
+
+var opened = false;
+var url = 'http://example.com';
+var num = 3;
+document.onclick = function() {
+if (!opened) {
+// jsPopunder('http://example.com');
+// jsNewtab();
+// newtab();
+// jsNewtab('http://example.com',3);
+jsAntiBlock(url,num);
+opened = true;
+}
+};
+
+
+</script>
+</head>
+<body>
+
+<h1>Click anywhere on the page, or the link below to see the exit popunder. </1>
+<h1><a href="#" ="jsNewtab('http://example.com',3)">Click Me</a></h1>
+</body>
+</html>
+
